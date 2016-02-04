@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "socialquartet-1211",
+  "private_key_id": "6a4530ee83256691520f0581fdbc11103aaacd4f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDVJIZOxS/ZcNPh\naEeliNsleG+/tclZbJWYr2EItIaMvlIGe9LszndP605XyB2plOPBM4DK0sov9DLG\n3Tj0sTVrElrHkerdpDfd4BMbGQrvkZwYkWJV/uFH0M6rYolqs2N2JYGrMy26r5/E\n9odBidh0VGMieMDqMrm5obrSe7KYLj8Pz8sKSCDxAA7ixM+GOY451UAapigVFL+m\n7asfO25LcwCjZu/3aT+jq8aONcqkJsnbEvry403cr4C3iDVj83UAwl0PJ0XY+npT\nZDAXCkJUZGqlDsc/y3bfY2gDDmQDhHlNwWat93L/P6ni7zWnXT+wvC9fK2M6jRJt\nxudICD2pAgMBAAECggEAVIQmKafxIFSn/7J87nvFAieukCNCUw5Gh4PLg0sqKzbw\niZeh/Lql/u+8Yfx9Hphmc167zDEncTpwxABGrGh0WR+vFYGb0wViDb3jdZRJjNN9\nRRSpHJZzuClpOfZZrRCy+M9Iip1Bncw0G0LyQR+qz/4CTVH6lSNGGAC0dvAL0mGS\n0iqR2XpthxrNGcYQ8/FduWqBLwH3QIPhon0DIvzZ4S0SNzmwGNNcV1nW/MNk4+6a\nK+G42gwlFsie5+Jb0kSSdVrPdVIrv3NqiXtx1YNWN042k8LxMdO0ilHZBO+s9YnM\nn1aGMwFgYZHmUWdYEoxs5Jx9wM6t5AoHwoHwpzCBsQKBgQDxDErWse3CvbrMku7h\nFkmAI9SVhphfxORO5NEIwe250EekSDYJ5OC2Za37ohNtxwoL0FsgUcf9PRiVzUdb\nED4uN2Ai6Q3CoqCDuNH3sUS6uDLQaX1UZChCogzDcS0B764vLIqVXF2wA5q3t8aR\n6WJWXtsItWbIrcus1jb+kJ1KbQKBgQDiXRxvMo06ofQ7XHaOUfez5sY2xhsPJcny\nx2zQ3I9Vjkz4ApxuD72w3bSEWmnOYmR8mzH19V90GQvc5FmU+qQAGxsJBSvQr1c8\nExlsWkEGiPNLqSV9udlruHuj4eTU/4G++11mJ0tfcDgfSJZWJ/QAXvpHDPHDl5ou\ngmUnXjl6rQKBgQDwCz278BTGCgssDma04Gzxnrzk6tRzCrARoOxJvFXw5OlzQDYQ\nRE1DVp6cKBsRB1WJzkPxO3/dQCprg7G7jcFeZObn3Q5G9YzDoBn4gB/hke2IfoTA\ntb0iHh53wwz/EKB1efXIJ+NklTJOIkUsqS20tWGKmptw3SInTGwXtgvtQQKBgAsb\nppmOUX/fEq0XDHpPa2hYmsF1Vz6XDCHtx1k4eZApO32wIx0DiLt1JbaY+Tg3e9bh\nhsIbGGQKFprwWbUF16ZprhnzNwM2l4FLLqQyiZ5YehfsZPqWdCTlGKwiGaiaITPO\nAfdRVlGIoDhox3fS3hZmksGJ0RNYDSjbHTuhVBDBAoGAHY1PK0TMv6z3h7ZLSEZm\nPJllsmttqbhfM1CZx3ILucuftD1BE/wpz0xi4kbBpb31NmVA2zB0cHv4bI/JphIF\nRGZsHIe5L6eHb9HQbJxKFx221g8flm3POdPydqpcz73SwYeistSdXqCQtBx8pOe9\ng3dZ7iU/t/LhSDoumSKWNrE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "socialquartet@socialquartet-1211.iam.gserviceaccount.com",
+  "client_id": "117419203620284228335",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/socialquartet%40socialquartet-1211.iam.gserviceaccount.com"
+}
