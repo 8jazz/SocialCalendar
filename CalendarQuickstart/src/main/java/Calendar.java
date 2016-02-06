@@ -31,6 +31,8 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Calendar
 {
@@ -190,8 +192,15 @@ public class Calendar
      */
     private com.google.api.services.calendar.Calendar getCalendarService() throws IOException
     {
-        Credential credential = authorize();
-        //Credential credential =  stocazzo();
+        //Credential credential = authorize();
+        Credential credential = null;
+        try
+        {
+            credential = stocazzo();
+        } catch (GeneralSecurityException ex)
+        {
+            Logger.getLogger(Calendar.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return new com.google.api.services.calendar.Calendar.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, credential)
@@ -201,6 +210,8 @@ public class Calendar
 
     private GoogleCredential stocazzo() throws GeneralSecurityException, IOException
     {   
+        String filePath = new File("").getAbsolutePath();
+        System.out.printf(filePath+"\n\n");
         String emailAddress = "social-quartet@pelagic-fin-121115.iam.gserviceaccount.com";
         JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
         HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -208,7 +219,7 @@ public class Calendar
                 .setTransport(httpTransport)
                 .setJsonFactory(JSON_FACTORY)
                 .setServiceAccountId(emailAddress)
-                .setServiceAccountPrivateKeyFromP12File(new File("/MyProject.p12"))
+                .setServiceAccountPrivateKeyFromP12File(new File("src/main/resources/MyProject.p12"))
                 .setServiceAccountScopes(SCOPES)
                 .build();
         
