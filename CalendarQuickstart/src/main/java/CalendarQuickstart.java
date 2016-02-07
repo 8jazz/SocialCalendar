@@ -5,10 +5,11 @@ public class CalendarQuickstart
 {           
     public static void main(String[] args) throws IOException
     {
-        Calendar c = new Calendar();
+        CalendarHandler c = new CalendarHandler();
+        Database db = new Database();
 
-        //c.inserisciEvento();
-        c.leggi();
+        //db.insertUser("albertoscalco");
+        //db.deleteUser("albertoscalco");
         
         
     }
