@@ -8,9 +8,13 @@ public class CalendarQuickstart
         CalendarHandler c = new CalendarHandler();
         Database db = new Database();
 
-        //db.insertUser("albertoscalco");
+        //db.insertUser("jessica");
         //db.deleteUser("albertoscalco");
         
+        db.addFollowing("jessica","riccardo@gmail.com");
+        db.addFollowing("jessica","albertoscalco11@gmail.com");
+        db.addFollowing("jessica","matteo@gmail.com");
+        db.removeFollowing("jessica","albertoscalco11@gmail.com");
         
     }
   
