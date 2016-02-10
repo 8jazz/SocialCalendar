@@ -1,5 +1,6 @@
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class CalendarQuickstart
 {           
@@ -8,13 +9,13 @@ public class CalendarQuickstart
         CalendarHandler c = new CalendarHandler();
         Database db = new Database();
 
-        //db.insertUser("jessica");
+        //db.insertUser("jessica@gmail.com", "jessica", "azzolin");
         //db.deleteUser("albertoscalco");
         
-        db.addFollowing("jessica","riccardo@gmail.com");
-        db.addFollowing("jessica","albertoscalco11@gmail.com");
-        db.addFollowing("jessica","matteo@gmail.com");
-        db.removeFollowing("jessica","albertoscalco11@gmail.com");
+        db.addFollowing("jessica@gmail.com","alberto@gmail.com");
+        //System.out.println(Arrays.toString(db.getFollowing("jessica@gmail.com")));
+        //db.removeFollowing("jessica@gmail.com","alberto@gmail.com");
+        
         
     }
   
