@@ -15,19 +15,29 @@ import java.io.IOException;
 
 public class Database
 {
-
+    private static Database g_ref;
+    
     private final com.google.api.services.calendar.Calendar g_service;
     private final CalendarHandler g_cal_handler;
+    private final XmlParser g_xml;
+    
     private final String CAL_ID = "9c35p8869rqo4e974pfff5ba2s@group.calendar.google.com";
     private final String DATE = "2016-01-01";
-    private final XmlParser g_parser;
 
-    public Database() throws IOException
+    private Database() throws IOException
     {
         g_service = ApiConnect.singleton().getServiceCalendar();
-        g_cal_handler = new CalendarHandler();
-        g_parser = new XmlParser();
+        g_cal_handler = new CalendarHandler(g_service);
+        g_xml = new XmlParser();
     }
+    
+    public static Database singleton() throws IOException
+    {
+        if (g_ref == null)
+            g_ref = new Database();
+        return g_ref;
+    }
+    
 
     public void insertPublicCal(String cal_name, String user_id) throws IOException //TO TEST
     {
@@ -44,49 +54,57 @@ public class Database
 
     public void insertUser(String user, String name, String surname) throws IOException
     {
-        String description = g_parser.createUserInfo(name,surname);
+        String description = g_xml.createUserInfo(name,surname);
         
-        g_cal_handler.createEvent(CAL_ID, null, user, "", description, true, "2016-01-01", "2016-01-01", "000+01:00", null, null, g_service);
-        g_cal_handler.viewCalendarEvents(CAL_ID, g_service);
+        g_cal_handler.createEvent(CAL_ID, null, user, "", description, true, "2016-01-01", "2016-01-01", "000+01:00", null, null);
+        g_cal_handler.viewCalendarEvents(CAL_ID);
     }
 
     public void deleteUser(String user) throws IOException
     {
-        String event_id = g_cal_handler.getIdFromSummary(user, CAL_ID, g_service);
+        String event_id = g_cal_handler.getIdFromSummary(user, CAL_ID);
         if (event_id == null)   //non esiste l'utente che si vuole eliminare
             System.exit(1);
-        g_cal_handler.deleteEvent(event_id, CAL_ID, g_service);
+        g_cal_handler.deleteEvent(event_id, CAL_ID);
     }
 
     public void addFollowing(String user, String following) throws IOException
     {
         //retrieve user's xml info
-        String event_id = g_cal_handler.getIdFromSummary(user, CAL_ID, g_service);
-        String event_desc = g_cal_handler.returnEvent(event_id, CAL_ID, g_service).getDescription();
+        String event_id = g_cal_handler.getIdFromSummary(user, CAL_ID);
+        String event_desc = g_cal_handler.returnEvent(event_id, CAL_ID).getDescription();
         //add a following email in the folliwing xml tag
-        event_desc = g_parser.addElement(event_desc, "following", "email", following);    
+        event_desc = g_xml.addElement(event_desc, "following", "email", following);    
         //update the info
-        g_cal_handler.updateEvent(event_id, CAL_ID, null, null, event_desc, null, null, null, null, null, g_service);
+        g_cal_handler.updateEvent(event_id, CAL_ID, null, null, event_desc, null, null, null, null, null);
 
     }
 
     public String[] getFollowing(String user) throws IOException
     {
         //retrieve user's xml info
-        String event_id = g_cal_handler.getIdFromSummary(user, CAL_ID, g_service);
-        String xml = g_cal_handler.returnEvent(event_id, CAL_ID, g_service).getDescription();
-        return g_parser.getElements(xml, "email");
+        String event_id = g_cal_handler.getIdFromSummary(user, CAL_ID);
+        String xml = g_cal_handler.returnEvent(event_id, CAL_ID).getDescription();
+        return g_xml.getElements(xml, "email");
     }
 
     public void removeFollowing(String user, String following) throws IOException
     {
         //retrieve user's xml info
-        String event_id = g_cal_handler.getIdFromSummary(user, CAL_ID, g_service);
-        String event_desc = g_cal_handler.returnEvent(event_id, CAL_ID, g_service).getDescription();  
+        String event_id = g_cal_handler.getIdFromSummary(user, CAL_ID);
+        String event_desc = g_cal_handler.returnEvent(event_id, CAL_ID).getDescription();  
         //add a following email in the folliwing xml tag
-        event_desc = g_parser.removeElement(event_desc, "email", following);
+        event_desc = g_xml.removeElement(event_desc, "email", following);
         //update the info
-        g_cal_handler.updateEvent(event_id, CAL_ID, null, null, event_desc, null, null, null, null, null, g_service);
+        g_cal_handler.updateEvent(event_id, CAL_ID, null, null, event_desc, null, null, null, null, null);
+    }
+    
+    public void publicEvents() throws IOException
+    {
+        //for the search, all the public user's events
+        g_cal_handler.getPublicEvents(CAL_ID);
+        
+        
     }
 
 }

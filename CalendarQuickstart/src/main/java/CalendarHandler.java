@@ -22,20 +22,20 @@ public class CalendarHandler
 
     private com.google.api.services.calendar.Calendar g_service;
 
-    public CalendarHandler() throws IOException
+    public CalendarHandler(com.google.api.services.calendar.Calendar service) throws IOException
     {
-        g_service = ApiConnect.singleton().getCalendar();
+        this.g_service = service;
     }
 
     //ritorna la lista dei calendari
-    private List<CalendarListEntry> viewCalendarsName(com.google.api.services.calendar.Calendar services) throws IOException
+    private List<CalendarListEntry> viewCalendarsName() throws IOException
     {
         // Iterate through entries in calendar list
         String pageToken = null;
         List<CalendarListEntry> total = new ArrayList<>();
         do
         {
-            CalendarList calendar_list = services.calendarList().list().setPageToken(pageToken).execute();
+            CalendarList calendar_list = g_service.calendarList().list().setPageToken(pageToken).execute();
             List<CalendarListEntry> items = calendar_list.getItems();
 
             for (CalendarListEntry calendar_list_entry : items)
@@ -49,11 +49,11 @@ public class CalendarHandler
         return total;
     }
 
-    public void viewCalendarEvents(String id, com.google.api.services.calendar.Calendar service) throws IOException
+    public void viewCalendarEvents(String id) throws IOException
     {
         // List the next 50 events from the "ID" calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
-        Events events = service.events().list(id)
+        Events events = g_service.events().list(id)
                 //.setMaxResults(50)
                 //.setTimeMin(now)
                 .setOrderBy("startTime")
@@ -73,18 +73,18 @@ public class CalendarHandler
     }
 
     //rimuove calendario se e solo se è diverso dal primario.
-    public static void removeCalendar(String id, com.google.api.services.calendar.Calendar service) throws IOException
+    public void removeCalendar(String id) throws IOException
     {
-        service.calendars().delete(id).execute();
+        g_service.calendars().delete(id).execute();
     }
 
-    public void createCalendar(String name, com.google.api.services.calendar.Calendar service) throws IOException
+    public void createCalendar(String name) throws IOException
     {
         // Create a new calendar
         com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
         calendar.setSummary(name);
         // Insert the new calendar
-        com.google.api.services.calendar.model.Calendar createdCalendar = service.calendars().insert(calendar).execute();
+        com.google.api.services.calendar.model.Calendar createdCalendar = g_service.calendars().insert(calendar).execute();
 
         System.out.println(createdCalendar.getId()); //da togliere.......................................
     }
@@ -96,10 +96,10 @@ public class CalendarHandler
     scope_value = email address of a user
     role = "none" || "freeBusyReader" || "reader" || "writer" || "owner" 
      */
-    public void updateCalendar(String id, String summary, String description, String location, String timeZone, String scope_type, String scope_value, String role, com.google.api.services.calendar.Calendar service) throws IOException
+    public void updateCalendar(String id, String summary, String description, String location, String timeZone, String scope_type, String scope_value, String role) throws IOException
     {
         com.google.api.services.calendar.model.Calendar calendar
-                = service.calendars().get(id).execute();
+                = g_service.calendars().get(id).execute();
         // Make a change if it's possible
         if (summary != null)
             calendar.setSummary(summary);
@@ -117,13 +117,13 @@ public class CalendarHandler
         rule.setScope(scope).setRole(role);
 
         // Insert new access rule
-        AclRule createdRule = service.acl().insert(id, rule).execute();
+        AclRule createdRule = g_service.acl().insert(id, rule).execute();
 
         System.out.println(createdRule.getId());
         System.out.println(calendar.values());
     }
 
-    public void createEvent(String calendar_id, String event_id, String summary, String location, String description, boolean all_day, String date_time_start, String date_time_end, String time_zone, String[] recurrence, EventAttendee[] attendees, com.google.api.services.calendar.Calendar service) throws IOException
+    public void createEvent(String calendar_id, String event_id, String summary, String location, String description, boolean all_day, String date_time_start, String date_time_end, String time_zone, String[] recurrence, EventAttendee[] attendees) throws IOException
     {
 
         Event event = new Event()
@@ -165,7 +165,7 @@ public class CalendarHandler
                 .setUseDefault(false)
                 .setOverrides(Arrays.asList(reminderOverrides));
         event.setReminders(reminders);*/
-        event = service.events().insert(calendar_id, event).execute();
+        event = g_service.events().insert(calendar_id, event).execute();
 
         System.out.println(event.getId());
         System.out.printf("Event created: %s\n", event.getHtmlLink());
@@ -182,25 +182,25 @@ public class CalendarHandler
     }
 
     //cancella l'evento
-    public void deleteEvent(String event_id, String calendar_id, com.google.api.services.calendar.Calendar service) throws IOException
+    public void deleteEvent(String event_id, String calendar_id) throws IOException
     {
-        service.events().delete(calendar_id, event_id).execute();
+        g_service.events().delete(calendar_id, event_id).execute();
     }
 
     //date id calendario e id evento ritorna l'oggetto Evento
-    public Event returnEvent(String event_id, String calendar_id, com.google.api.services.calendar.Calendar service) throws IOException
+    public Event returnEvent(String event_id, String calendar_id) throws IOException
     {
-        return service.events().get(calendar_id, event_id).execute();
+        return g_service.events().get(calendar_id, event_id).execute();
     }
 
     //aggiorna SOLO ciò che non è nullo. NB se si cambia la data di inizio / fine BISOGNA mettere anche time_zone ASSOLUTAMENTE!!!
-    public void updateEvent(String event_id, String calendar_id, String summary, String location, String description, String date_time_start, String date_time_end, String time_zone, String[] recurrence, EventAttendee[] attendees, com.google.api.services.calendar.Calendar service) throws IOException
+    public void updateEvent(String event_id, String calendar_id, String summary, String location, String description, String date_time_start, String date_time_end, String time_zone, String[] recurrence, EventAttendee[] attendees) throws IOException
     {
         // Refer to the Java quickstart on how to setup the environment:
         // https://developers.google.com/google-apps/calendar/quickstart/java
         // Change the scope to CalendarScopes.CALENDAR and delete any stored
         // credentials.
-        Event event = returnEvent(event_id, calendar_id, service);
+        Event event = returnEvent(event_id, calendar_id);
         if (summary != null)
             event.setSummary(summary);
         if (location != null)
@@ -237,18 +237,17 @@ public class CalendarHandler
                 .setUseDefault(false)
                 .setOverrides(Arrays.asList(reminderOverrides));
         event.setReminders(reminders);*/
-        
-        service.events().update(calendar_id, event.getId(), event).execute();
+        g_service.events().update(calendar_id, event.getId(), event).execute();
         System.out.println(event.getId());
         System.out.printf("Event updated: %s\n", event.getHtmlLink());
     }
 
-    public String getIdFromSummary(String summary, String cal_id, com.google.api.services.calendar.Calendar service) throws IOException
+    public String getIdFromSummary(String summary, String cal_id) throws IOException
     {
         String pageToken = null;
         do
         {
-            Events events = service.events().list(cal_id).setPageToken(pageToken).execute();
+            Events events = g_service.events().list(cal_id).setPageToken(pageToken).execute();
             List<Event> items = events.getItems();
             for (Event event : items)
                 if (event.getSummary().equals(summary))
@@ -256,5 +255,36 @@ public class CalendarHandler
             pageToken = events.getNextPageToken();
         } while (pageToken != null);
         return null;
+    }
+
+    public void getPublicEvents(String cal_id) throws IOException
+    {
+        DateTime now = new DateTime(System.currentTimeMillis());
+
+        Events events = g_service.events().list(cal_id) //query the public events into the db
+                .setTimeMin(now)
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
+
+        List<Event> items = events.getItems();
+
+        if (items.isEmpty())
+        {
+            System.out.println("No public events found.");
+            return;
+        }
+
+        for (int i = 0; i < items.size(); i++)
+            if (!"public".equals(items.get(i).getVisibility()))
+                items.remove(i);
+
+        for (Event event : items)
+        {
+            DateTime start = event.getStart().getDateTime();
+            if (start == null)
+                start = event.getStart().getDate();
+            System.out.printf("%s (%s) (%s)\n", event.getSummary(), start, event.getVisibility());
+        }
     }
 }

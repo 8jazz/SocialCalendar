@@ -3,14 +3,12 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -97,21 +95,31 @@ public class XmlParser
         return res;
     }
     
-    //LA RIMOZIONE CREA SPAZI VUOTI (DECIDERE SE GESTIRE LA COSA)
     public String removeElement(String xml, String element_name, String value)
     {
         Document doc = getDocument(xml);
          
-        NodeList nodes = doc.getElementsByTagName(element_name);    
+        NodeList nodes = doc.getElementsByTagName(element_name);
+        ArrayList<Node> exiles = new ArrayList<>(); 
+        
+        //find all nodes with specified name and value
         for (int i = 0; i < nodes.getLength(); i++)
         {
             Node node = nodes.item(i);
             if (value.equals(node.getTextContent()))
-            {
-                node.getParentNode().removeChild(node);
-                break;
-            }
+                exiles.add(node);
         }
+        
+        //find all the white spaces
+        for (int i = 0; i < exiles.size(); i++)
+            for (Node whitespace = exiles.get(i).getNextSibling();
+                whitespace != null && whitespace.getNodeType() == Node.TEXT_NODE && whitespace.getTextContent().matches("\\s*");
+                whitespace = whitespace.getNextSibling())
+                    exiles.add(whitespace);
+        
+        //remove all finded nodes
+        for (Node exile : exiles)
+            exile.getParentNode().removeChild(exile);
         
         return getXmlString(doc);
     }
